@@ -1,0 +1,25 @@
+{
+	"name": "client",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"moralis:sync": "moralis-admin-cli connect-local-devchain --chain hardhat --moralisSubdomain lemjc1p7yl71.usemoralis.com --frpcPath ./frp/frpc",
+		"moralis:cloud": "moralis-admin-cli watch-cloud-folder --moralisSubdomain lemjc1p7yl71.usemoralis.com --autoSave 1 --moralisCloudfolder ./cloudFunctions"
+	},
+	"dependencies": {
+		"moralis": "^1.10.1",
+		"next": "12.2.3",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"react-moralis": "^1.4.0",
+		"sass": "^1.54.0",
+		"web3uikit": "^0.0.133"
+	},
+	"devDependencies": {
+		"dotenv": "^16.0.1"
+	}
+}
