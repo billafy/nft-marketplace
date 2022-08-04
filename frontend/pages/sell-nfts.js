@@ -1,7 +1,11 @@
+import ListNft from "../components/ListNft";
+import Withdraw from "../components/Withdraw";
+
 const SellNfts = () => {
 	return (
 		<div>
-			Sell
+			<ListNft />
+			<Withdraw />
 		</div>
 	);
 };

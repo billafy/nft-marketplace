@@ -43,3 +43,51 @@ Moralis.Cloud.afterSave("ItemRemoved", async (req) => {
 		}
 	}
 });
+
+Moralis.Cloud.afterSave("ItemBought", async (req) => {
+	const confirmed = req.object.get("confirmed");
+	const logger = Moralis.Cloud.getLogger();
+	if (confirmed) {
+		const ActiveItem = Moralis.Object.extend("ActiveItem");
+		const query = new Moralis.Query(ActiveItem);
+		query.equalTo("marketplaceAddress", req.object.get("address"));
+		query.equalTo("nftAddress", req.object.get("nftAddress"));
+		query.equalTo("tokenId", req.object.get("tokenId"));
+		query.equalTo("price", req.object.get("price"));
+
+		const boughtItem = await query.first();
+
+		if (boughtItem) {
+			logger.info(
+				`Removing Item: \n\tNFT Address: ${req.object.get(
+					"address"
+				)}\n\tToken ID: ${req.object.get("tokenId")}`
+			);
+			await boughtItem.destroy();
+		}
+	}
+});
+
+Moralis.Cloud.afterSave("ItemUpdated", async (req) => {
+	const confirmed = req.object.get("confirmed");
+	const logger = Moralis.Cloud.getLogger();
+	if (confirmed) {
+		const ActiveItem = Moralis.Object.extend("ActiveItem");
+		const query = new Moralis.Query(ActiveItem);
+		query.equalTo("marketplaceAddress", req.object.get("address"));
+		query.equalTo("nftAddress", req.object.get("nftAddress"));
+		query.equalTo("tokenId", req.object.get("tokenId"));
+
+		const updatedItem = await query.first();
+
+		updatedItem.set("price", req.object.get("price"));
+
+		logger.info(
+			`Updating Item: \n\tNFT Address: ${req.object.get(
+				"address"
+			)}\n\tToken ID: ${req.object.get("tokenId")}`
+		);
+
+		await updatedItem.save();
+	}
+});

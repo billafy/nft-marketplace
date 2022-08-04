@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import { MoralisProvider } from "react-moralis";
+import { NotificationProvider } from "web3uikit";
 import Header from "../components/Header";
 // import Head from "next/head";
 
@@ -10,13 +11,11 @@ console.log(APP_ID, SERVER_URL);
 
 const MyApp = ({ Component, pageProps }) => {
 	return (
-		<MoralisProvider
-			serverUrl={SERVER_URL}
-			appId={APP_ID}
-		>
-			
-			<Header />
-			<Component {...pageProps} />
+		<MoralisProvider serverUrl={SERVER_URL} appId={APP_ID}>
+			<NotificationProvider>
+				<Header />
+				<Component {...pageProps} />
+			</NotificationProvider>
 		</MoralisProvider>
 	);
 };

@@ -11,11 +11,14 @@ const moralisChainId = chainId === "31337" ? "1337" : chainId;
 
 const contractAddress = contractAddresses[chainId];
 
-
 const main = async () => {
 	await Moralis.start({ serverUrl, appId, masterKey });
 
-	const options = { chainId: moralisChainId, sync_historical: true, address: contractAddress };
+	const options = {
+		chainId: moralisChainId,
+		sync_historical: true,
+		address: contractAddress,
+	};
 
 	const itemListedOptions = {
 		...options,
@@ -91,6 +94,43 @@ const main = async () => {
 		tableName: "ItemBought",
 	};
 
+	const itemUpdatedOptions = {
+		...options,
+		topic: "ItemUpdated(address, address, uint256, uint256)",
+		abi: {
+			anonymous: false,
+			inputs: [
+				{
+					indexed: true,
+					internalType: "address",
+					name: "seller",
+					type: "address",
+				},
+				{
+					indexed: true,
+					internalType: "address",
+					name: "nftAddress",
+					type: "address",
+				},
+				{
+					indexed: true,
+					internalType: "uint256",
+					name: "tokenId",
+					type: "uint256",
+				},
+				{
+					indexed: false,
+					internalType: "uint256",
+					name: "price",
+					type: "uint256",
+				},
+			],
+			name: "ItemUpdated",
+			type: "event",
+		},
+		tableName: "ItemUpdated",
+	};
+
 	const itemRemovedOptions = {
 		...options,
 		topic: "ItemRemoved(address, address, uint256)",
@@ -122,9 +162,20 @@ const main = async () => {
 		tableName: "ItemRemoved",
 	};
 
-	console.log(await Moralis.Cloud.run('watchContractEvent', itemListedOptions, {useMasterKey: true}));
-	await Moralis.Cloud.run('watchContractEvent', itemBoughtOptions, {useMasterKey: true});
-	await Moralis.Cloud.run('watchContractEvent', itemRemovedOptions, {useMasterKey: true});
+	console.log(
+		await Moralis.Cloud.run("watchContractEvent", itemListedOptions, {
+			useMasterKey: true,
+		})
+	);
+	await Moralis.Cloud.run("watchContractEvent", itemBoughtOptions, {
+		useMasterKey: true,
+	});
+	await Moralis.Cloud.run("watchContractEvent", itemRemovedOptions, {
+		useMasterKey: true,
+	});
+	await Moralis.Cloud.run("watchContractEvent", itemUpdatedOptions, {
+		useMasterKey: true,
+	});
 };
 
 main()
